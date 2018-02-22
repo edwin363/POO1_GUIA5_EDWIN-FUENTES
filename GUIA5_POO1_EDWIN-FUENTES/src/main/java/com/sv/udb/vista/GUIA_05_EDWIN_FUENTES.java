@@ -5,6 +5,9 @@
  */
 package com.sv.udb.vista;
 
+import com.sv.udb.controlador.EquiposCtrl;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Estudiante
@@ -30,7 +33,7 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbEquipos = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -40,7 +43,7 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbEquipos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -51,13 +54,18 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tbEquipos);
 
         jLabel1.setText("Name:");
 
         jLabel3.setText("Description:");
 
         btnsave.setText("save");
+        btnsave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnsaveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -133,6 +141,21 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnsaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsaveActionPerformed
+        try {
+            if(new EquiposCtrl().guardar(this.txtNombre.getText(), this.txtDescripcion.getText())){
+                JOptionPane.showMessageDialog(null, "Equipo guardado");
+                this.txtNombre.setText("");
+                this.txtDescripcion.setText("");
+            }
+            else{
+                    JOptionPane.showMessageDialog(null, "Error al guardarh equhipo");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al procesar");
+        }
+    }//GEN-LAST:event_btnsaveActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -176,7 +199,7 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tbEquipos;
     private javax.swing.JTextField txtDescripcion;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables

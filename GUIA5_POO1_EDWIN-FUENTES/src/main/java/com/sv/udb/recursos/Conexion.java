@@ -40,6 +40,7 @@ public class Conexion {
                 this.url = prop.getProperty("url");
                 this.user = prop.getProperty("user");
                 this.pass = prop.getProperty("password");
+                resp = true;
             }
         } catch (Exception e) {
             System.err.println("Error al leer el archivo de configuracion: " + e.getMessage());

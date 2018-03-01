@@ -10,62 +10,74 @@ package com.sv.udb.modelo;
  * @author Estudiante
  */
 public class Jugadores {
-    private int cod_equi;
-    private String nom_juga;
-    private int edad_juga;
-    private int altu_juga;
-    private String peso_juga;
+   
+    private int codiJuga;
+    private Equipos codiEqui;
+    private String nombJuga;
+    private int edadJuga, altuJuga, pesoJuga;
 
     public Jugadores() {
     }
 
-    public Jugadores(int cod_equi, String nom_juga, int edad_juga, int altu_juga, String peso_juga) {
-        this.cod_equi = cod_equi;
-        this.nom_juga = nom_juga;
-        this.edad_juga = edad_juga;
-        this.altu_juga = altu_juga;
-        this.peso_juga = peso_juga;
+    public Jugadores(int codiJuga, Equipos codiEqui, String nombJuga, int edadJuga, int altuJuga, int pesoJuga) {
+        this.codiJuga = codiJuga;
+        this.codiEqui = codiEqui;
+        this.nombJuga = nombJuga;
+        this.edadJuga = edadJuga;
+        this.altuJuga = altuJuga;
+        this.pesoJuga = pesoJuga;
     }
 
-    public int getCod_equi() {
-        return cod_equi;
+    public int getCodiJuga() {
+        return codiJuga;
     }
 
-    public void setCod_equi(int cod_equi) {
-        this.cod_equi = cod_equi;
+    public void setCodiJuga(int codiJuga) {
+        this.codiJuga = codiJuga;
     }
 
-    public String getNom_juga() {
-        return nom_juga;
+    public Equipos getCodiEqui() {
+        return codiEqui;
     }
 
-    public void setNom_juga(String nom_juga) {
-        this.nom_juga = nom_juga;
+    public void setCodiEqui(Equipos codiEqui) {
+        this.codiEqui = codiEqui;
     }
 
-    public int getEdad_juga() {
-        return edad_juga;
+    public String getNombJuga() {
+        return nombJuga;
     }
 
-    public void setEdad_juga(int edad_juga) {
-        this.edad_juga = edad_juga;
+    public void setNombJuga(String nombJuga) {
+        this.nombJuga = nombJuga;
     }
 
-    public int getAltu_juga() {
-        return altu_juga;
+    public int getEdadJuga() {
+        return edadJuga;
     }
 
-    public void setAltu_juga(int altu_juga) {
-        this.altu_juga = altu_juga;
+    public void setEdadJuga(int edadJuga) {
+        this.edadJuga = edadJuga;
     }
 
-    public String getPeso_juga() {
-        return peso_juga;
+    public int getAltuJuga() {
+        return altuJuga;
     }
 
-    public void setPeso_juga(String peso_juga) {
-        this.peso_juga = peso_juga;
+    public void setAltuJuga(int altuJuga) {
+        this.altuJuga = altuJuga;
     }
-    
-    
+
+    public int getPesoJuga() {
+        return pesoJuga;
+    }
+
+    public void setPesoJuga(int pesoJuga) {
+        this.pesoJuga = pesoJuga;
+    }
+
+    @Override
+    public String toString() {
+        return this.nombJuga;
+    }
 }

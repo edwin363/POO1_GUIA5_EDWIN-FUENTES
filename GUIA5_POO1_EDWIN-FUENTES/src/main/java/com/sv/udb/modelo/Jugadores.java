@@ -12,14 +12,14 @@ package com.sv.udb.modelo;
 public class Jugadores {
    
     private int codiJuga;
-    private Equipos codiEqui;
+    private int codiEqui;
     private String nombJuga;
     private int edadJuga, altuJuga, pesoJuga;
 
     public Jugadores() {
     }
 
-    public Jugadores(int codiJuga, Equipos codiEqui, String nombJuga, int edadJuga, int altuJuga, int pesoJuga) {
+    public Jugadores(int codiJuga, int codiEqui, String nombJuga, int edadJuga, int altuJuga, int pesoJuga) {
         this.codiJuga = codiJuga;
         this.codiEqui = codiEqui;
         this.nombJuga = nombJuga;
@@ -36,11 +36,11 @@ public class Jugadores {
         this.codiJuga = codiJuga;
     }
 
-    public Equipos getCodiEqui() {
+    public int getCodiEqui() {
         return codiEqui;
     }
 
-    public void setCodiEqui(Equipos codiEqui) {
+    public void setCodiEqui(int codiEqui) {
         this.codiEqui = codiEqui;
     }
 

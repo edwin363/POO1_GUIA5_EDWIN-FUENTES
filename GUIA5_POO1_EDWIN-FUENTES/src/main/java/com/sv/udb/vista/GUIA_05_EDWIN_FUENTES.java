@@ -8,9 +8,12 @@ package com.sv.udb.vista;
 import com.sv.udb.controlador.EquiposCtrl;
 import com.sv.udb.controlador.JugadoresCtrl;
 import com.sv.udb.modelo.Equipos;
-import javafx.scene.control.ComboBox;
+import com.sv.udb.modelo.Jugadores;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -21,9 +24,52 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
     /**
      * Creates new form GUIA_05_EDWIN_FUENTES
      */
+    private int codiEqui;
+    private int codiJug;
+    
+    private int codiEqui2;
+    private int codiEqui3;
     public GUIA_05_EDWIN_FUENTES() {
         initComponents();
+        this.llenarTabla();
+        this.llenarTabla2();
+        this.setLocationRelativeTo(null);
+        
+        EquiposCtrl equi = new EquiposCtrl();
+        equi.getEquipos(cmbEquipo);
     }
+    
+    private void llenarTabla(){
+        try {
+            DefaultTableModel model = (DefaultTableModel)this.tbEquipos.getModel();
+            while(model.getRowCount() > 0)
+            {
+                model.removeRow(0);
+            }
+            for(Equipos temp : new EquiposCtrl().consTodo()){
+                model.addRow(new Object[]{temp, temp.getDesc_equi()});
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }
+    
+    private void llenarTabla2(){
+        try {
+            DefaultTableModel model2 = (DefaultTableModel)this.tbJugadores.getModel();
+            while(model2.getRowCount() > 0)
+            {
+                model2.removeRow(0);
+            }
+            for(Jugadores temp2 : new JugadoresCtrl().consTodo1()){
+                model2.addRow(new Object[]{temp2.getCodiEqui(),temp2, temp2.getEdadJuga(), temp2.getAltuJuga(), temp2.getPesoJuga()});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -46,6 +92,8 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
         btndelete = new javax.swing.JButton();
         btnconsultar = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        txtBuscar = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -58,43 +106,74 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         cmbEquipo = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbJugadores = new javax.swing.JTable();
         btnGuardar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnConsult = new javax.swing.JButton();
         btnModif = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tbEquipos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Equipo", "Descripcion"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbEquipos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbEquiposMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbEquipos);
 
         jLabel1.setText("Name:");
 
         jLabel3.setText("Description:");
 
-        btnsave.setText("save");
+        btnsave.setText("Guardar");
         btnsave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnsaveActionPerformed(evt);
             }
         });
 
-        btndelete.setText("delete");
+        btndelete.setText("Eliminar");
+        btndelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btndeleteActionPerformed(evt);
+            }
+        });
 
-        btnconsultar.setText("consult");
+        btnconsultar.setText("Consultar");
+        btnconsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnconsultarActionPerformed(evt);
+            }
+        });
 
-        btnEdit.setText("Edit");
+        btnEdit.setText("Editar");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("Buscar equipo");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -104,28 +183,30 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(35, 35, 35)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtDescripcion))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnsave)
-                                .addGap(27, 27, 27)
-                                .addComponent(btndelete))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnconsultar)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnEdit)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                            .addComponent(txtDescripcion)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(btnsave)
+                        .addGap(35, 35, 35)
+                        .addComponent(btndelete))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(119, 119, 119)
+                        .addComponent(btnEdit)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(41, 41, 41)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnconsultar)
+                            .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -146,11 +227,18 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
                             .addComponent(btnsave)
                             .addComponent(btndelete)))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnconsultar)
-                    .addComponent(btnEdit))
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnconsultar))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(btnEdit)))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Equipos", jPanel1);
@@ -165,18 +253,31 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
 
         jLabel7.setText("Seleccione el equipo:");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbJugadores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "codigo equipo", "nombre jugador", "edad jugador", "altura jugador", "peso jugador"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbJugadores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbJugadoresMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbJugadores);
 
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -186,10 +287,27 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
         });
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnConsult.setText("Consultar");
 
         btnModif.setText("Modificar");
+        btnModif.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModifActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Seleccionar equipo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -199,45 +317,46 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addComponent(btnGuardar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnEliminar))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addComponent(btnConsult)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                                .addComponent(btnModif))))
+                                .addGap(29, 29, 29)
+                                .addComponent(btnModif)))
+                        .addGap(1, 1, 1))
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(56, 56, 56)
+                                .addComponent(txtnomJuga, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(84, 84, 84)
+                                .addComponent(txtEdadJug)))
+                        .addGap(66, 66, 66)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(27, 27, 27)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addGap(56, 56, 56)
-                                        .addComponent(txtnomJuga, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel4)
-                                        .addGap(84, 84, 84)
-                                        .addComponent(txtEdadJug)))
-                                .addGap(66, 66, 66)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6))
-                                .addGap(39, 39, 39)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtAltuJug)
-                                    .addComponent(txtPesoJug, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(137, 137, 137)
-                                .addComponent(jLabel7)
-                                .addGap(41, 41, 41)
-                                .addComponent(cmbEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addGap(39, 39, 39)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtAltuJug)
+                            .addComponent(txtPesoJug, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE))
+                        .addGap(0, 36, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(137, 137, 137)
+                        .addComponent(jLabel7)
+                        .addGap(41, 41, 41)
+                        .addComponent(cmbEquipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1)))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -257,8 +376,9 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(cmbEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                    .addComponent(cmbEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -279,7 +399,7 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 551, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 670, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -296,6 +416,7 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
         try {
             if(new EquiposCtrl().guardar(this.txtNombre.getText(), this.txtDescripcion.getText())){
                 JOptionPane.showMessageDialog(null, "Equipo guardado");
+                this.llenarTabla();
                 this.txtNombre.setText("");
                 this.txtDescripcion.setText("");
             }
@@ -313,17 +434,113 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
         int edadJug = Integer.parseInt(txtEdadJug.getText());
         int alturaJug = Integer.parseInt(txtAltuJug.getText());
         int pesoJug = Integer.parseInt(txtPesoJug.getText());
+        int codigo = cmbEquipo.getSelectedIndex();
         
         try {
-            if(new JugadoresCtrl().guardarJug((Equipos)cmbEquipo.getSelectedItem(), this.txtnomJuga.getText(), edadJug, alturaJug, pesoJug)){
+            if(new JugadoresCtrl().guardarJug(this.codiEqui2, this.txtnomJuga.getText(), edadJug, alturaJug, pesoJug)){
                  JOptionPane.showMessageDialog(null, "Jugador guardado");
+                 
             }else{
                 JOptionPane.showMessageDialog(null, "Error al guardarh equhipo");
+                System.err.println(codigo);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al procesar");
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void tbEquiposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbEquiposMouseClicked
+        int fila = this.tbEquipos.getSelectedRow();
+        if(fila >=0){
+            Equipos obj = (Equipos)this.tbEquipos.getValueAt(fila, 0);
+            this.codiEqui = obj.getCodi_equi();
+            this.txtNombre.setText(obj.getNom_equi());
+            this.txtDescripcion.setText(obj.getDesc_equi());
+            System.err.println(codiEqui);
+        }
+    }//GEN-LAST:event_tbEquiposMouseClicked
+
+    private void btndeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndeleteActionPerformed
+        try {
+            if(new EquiposCtrl().eliminar(this.codiEqui)){
+                JOptionPane.showMessageDialog(null, "Equipo eliminado");
+                this.llenarTabla();
+                txtNombre.setText("");
+                txtDescripcion.setText("");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btndeleteActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        try {
+            if(new EquiposCtrl().editar(txtNombre.getText(), txtDescripcion.getText(), this.codiEqui)){
+                JOptionPane.showMessageDialog(this, "Equipo modificado");
+                this.llenarTabla();
+                txtNombre.setText("");
+                txtDescripcion.setText("");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnconsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnconsultarActionPerformed
+        try {
+            if(new EquiposCtrl().consultar(txtBuscar.getText())){
+                JOptionPane.showMessageDialog(null, "Equipo encontrado");
+                txtBuscar.setText("");
+            }else{
+                JOptionPane.showMessageDialog(null, "Equipo no encontrado");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnconsultarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.codiEqui2 = cmbEquipo.getItemAt(cmbEquipo.getSelectedIndex()).getCodi_equi();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void tbJugadoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbJugadoresMouseClicked
+        int fila = this.tbJugadores.getSelectedRow();
+        if(fila >=0){
+            Jugadores obj = (Jugadores)this.tbJugadores.getValueAt(fila, 0);
+            this.codiJug = obj.getCodiJuga();
+            this.codiEqui3 = obj.getCodiEqui();
+            this.txtnomJuga.setText(obj.getNombJuga());
+            this.txtEdadJug.setText(String.valueOf(obj.getEdadJuga()));
+            this.txtAltuJug.setText(String.valueOf(obj.getAltuJuga()));
+            this.txtPesoJug.setText(String.valueOf(obj.getPesoJuga()));
+            System.err.println(codiEqui2);
+            
+            
+        }
+    }//GEN-LAST:event_tbJugadoresMouseClicked
+
+    private void btnModifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifActionPerformed
+        int edadJug = Integer.parseInt(txtEdadJug.getText());
+        int altuJuga = Integer.parseInt(txtAltuJug.getText());
+        int pesoJuga = Integer.parseInt(txtPesoJug.getText());
+        try {
+            if(new JugadoresCtrl().modificarJug(codiEqui2, txtnomJuga.getText(), edadJug, altuJuga, pesoJuga)){
+                JOptionPane.showMessageDialog(null, "Jugador modificado");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnModifActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        try {
+            if(new JugadoresCtrl().eliminarJug(this.codiJug)){
+                JOptionPane.showMessageDialog(null, "Jugador eliminado");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -369,7 +586,8 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
     private javax.swing.JButton btnconsultar;
     private javax.swing.JButton btndelete;
     private javax.swing.JButton btnsave;
-    private javax.swing.JComboBox<String> cmbEquipo;
+    private javax.swing.JComboBox<Equipos> cmbEquipo;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -377,14 +595,16 @@ public class GUIA_05_EDWIN_FUENTES extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable tbEquipos;
+    private javax.swing.JTable tbJugadores;
     private javax.swing.JTextField txtAltuJug;
+    private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtDescripcion;
     private javax.swing.JTextField txtEdadJug;
     private javax.swing.JTextField txtNombre;
